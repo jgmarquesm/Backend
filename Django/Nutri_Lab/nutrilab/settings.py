@@ -139,3 +139,9 @@ MESSAGE_TAGS = {
     constants.INFO: 'alert-info',
     constants.WARNING: 'alert-warning',
 }
+
+# E-mail
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # console.Email.Backend = teste => o e-mail aparece no terminal ao invés de enviar e-mails reais
+# Para enviar email de verdade deve trocar console por smtp e configurar
+EMAIL_HOST_USER = 'ccbeu123@gmail.com'

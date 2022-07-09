@@ -1,6 +1,10 @@
 import re
 from django.contrib import messages
 from django.contrib.messages import constants
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
 
 def senha_e_valida(request, senha, confirmar_senha):
     
@@ -29,3 +33,14 @@ def senha_e_valida(request, senha, confirmar_senha):
         return False'''
     
     return True
+
+def email_html(path_template, assunto, para, **kwargs):
+    
+    html_content = render_to_string(path_template, kwargs)
+    text_content = strip_tags(html_content)
+    
+    email = EmailMultiAlternatives(assunto, text_content, settings.EMAIL_HOST_USER, para)
+    
+    email.attach_alternative(html_content, "text/html")
+    email.send()
+    return {'status': 1}
