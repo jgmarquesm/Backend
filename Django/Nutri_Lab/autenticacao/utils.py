@@ -44,3 +44,4 @@ def email_html(path_template, assunto, para, **kwargs):
     email.attach_alternative(html_content, "text/html")
     email.send()
     return {'status': 1}
+
