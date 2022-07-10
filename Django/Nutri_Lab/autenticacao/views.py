@@ -26,10 +26,11 @@ def cadastrar(request):
     if not senha_e_valida(request, senha, confirmar_senha): 
         return redirect("/auth/cadastro")
     
-    try:
-        if User.objects.filter(Exists(User.objects.filter(username=usuario))):
+    if User.objects.filter(Exists(User.objects.filter(username=usuario))):
             messages.add_message(request, constants.ERROR, "Usuário não disponível ou já cadastrado.")
             return redirect("/auth/cadastro/")
+    
+    try:
             
         user = User.objects.create_user(username = usuario,
                                         password = senha,
@@ -53,7 +54,7 @@ def cadastrar(request):
 def logar(request):
     if request.method == "GET":
         if request.user.is_authenticated:
-            return redirect('/')
+            return redirect('/pacientes/')
         return render(request, "logar.html")
     
     elif request.method == "POST":
@@ -68,7 +69,7 @@ def logar(request):
         
         else:
             auth.login(request, user)
-            return redirect('/')
+            return redirect('/pacientes/')
         
 def sair(request):
     auth.logout(request)
