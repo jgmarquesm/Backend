@@ -28,9 +28,9 @@
     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
         + Nova refeição
     </button>
-    <button type="button" class="btn btn-outline-primary" data-url="{% url 'download' paciente.id %}">
+    <a class="btn btn-outline-primary" href="{% url 'download' paciente.id %}">
         Exportar refeição
-    </button>
+    </a>
     <br>
     <br>
     <div class="fundo-alimentar">

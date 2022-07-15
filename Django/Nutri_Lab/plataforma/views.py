@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages import constants
@@ -7,6 +7,9 @@ from .models import Pacientes, DadosPaciente, Refeicao, Opcao
 from .utils import dados_validados
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
+
 
 @login_required(login_url="/auth/login/")
 def paciente(request):
@@ -185,7 +188,28 @@ def opcao(request, id):
 
         messages.add_message(request, constants.SUCCESS, 'Opção cadastrada com sucesso!')
         return redirect(f'/plano_alimentar/{id}')
+
+def mtp(mm): # mm to points
+        return mm/0.35277
     
 @login_required(login_url="/auth/login/")
 def download_refeicoes(request, id):
-    return HttpResponse("Teste")
+    
+    paciente = get_object_or_404(Pacientes, id=id)
+    #refeicao = Refeicao.objects.filter(paciente=paciente).values_list("titulo", flat=True).get()
+    
+    canvas_pdf = canvas.Canvas(f"Plano_alimentar_{paciente.nome}#{id}.pdf")
+    canvas_pdf.drawString(mtp(10), mtp(285), f"Nome do paciente: {paciente.nome}")
+    
+    '''for ref in refeicao:
+        opcoes = Opcao.objects.filter(refeicao=ref).values_list("descricao", flat=True).get()
+        for op in opcoes:
+            if op.refeicao == ref:
+                canvas_pdf.drawImage("/media/Calc.png", mtp(10), mtp(285-5*(refeicao.index(ref)+2)))
+                canvas_pdf.drawString(mtp(50), mtp(285-5*(refeicao.index(ref)+2)), f"Opções: {op.descricao}")'''
+        
+    canvas_pdf.save()
+    
+    return redirect(f'/plano_alimentar/{id}')
+
+    
